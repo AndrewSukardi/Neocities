@@ -267,7 +267,8 @@
   });
 
   function fetch_pokemon() {
-    loading.classList.add("hidden"); 
+    loading.classList.remove("hidden"); 
+    content.classList.add("hidden");
     fetch(`https://pokeapi.co/api/v2/pokemon/?offset=${offset}&limit=${limit}`)
       .then(response => {
         if (!response.ok) {
@@ -319,6 +320,7 @@
             pokemonList.forEach(p => {
               addLingua(p.name, p.image, p.id, p.type,p.cries);
             content.classList.remove("hidden");
+            loading.classList.add("hidden"); 
             });
           })
           .catch(error => {
