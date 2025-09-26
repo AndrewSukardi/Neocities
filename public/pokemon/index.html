@@ -35,20 +35,57 @@
     </div> -->
     <input type="text" onkeyup="console.log(document.getElementById('search').value)" name="search" id="search"
       placeholder="Search for names..">
-    <div id="content" class="hidden w-full flex items-center flex-col">
+    <div id="toggle_sound" onclick="togglesound()" class="cursor-pointer fixed right-3 top-3">
+      <div id="mute" class="w-6 h-6 ">
+        <svg viewBox="-0.5 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+          <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+          <g id="SVGRepo_iconCarrier">
+            <path
+              d="M10.9395 17.72C12.9395 19.5 15.3895 20.72 16.5495 20.33C18.6495 19.55 18.9995 15.3299 18.9995 12.4099C18.9995 11.5999 18.9995 10.68 18.8895 9.77002"
+              stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+            <path
+              d="M18.1292 6.28008C18.0012 5.89129 17.795 5.53273 17.5233 5.22661C17.2516 4.9205 16.9201 4.67327 16.5493 4.50005C15.3193 4.04005 12.7093 5.49996 10.5493 7.40996H8.94922C7.88835 7.40996 6.87093 7.83145 6.12079 8.58159C5.37064 9.33174 4.94922 10.3491 4.94922 11.41V13.41C4.9489 14.1811 5.17151 14.936 5.59021 15.5835C6.00892 16.2311 6.60585 16.7438 7.3092 17.06"
+              stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+            <path d="M22 2.42004L2 22.42" stroke="#000000" stroke-width="1.5" stroke-linecap="round"
+              stroke-linejoin="round"></path>
+          </g>
+        </svg>
+      </div>
+      <div id="unmute" class="hidden w-6 h-6 ">
+        <svg viewBox="-0.5 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+          <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+          <g id="SVGRepo_iconCarrier">
+            <path
+              d="M12.5493 4.50005C11.3193 4.04005 8.70926 5.49996 6.54926 7.40996H4.94922C3.88835 7.40996 2.87093 7.83145 2.12079 8.58159C1.37064 9.33174 0.949219 10.3491 0.949219 11.41V13.41C0.949219 14.4708 1.37064 15.4883 2.12079 16.2385C2.87093 16.9886 3.88835 17.41 4.94922 17.41H6.54926C8.65926 19.35 11.2693 20.78 12.5493 20.33C14.6493 19.55 14.9992 15.33 14.9992 12.41C14.9992 9.48996 14.6493 5.28005 12.5493 4.50005Z"
+              stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+            <path
+              d="M18.5391 15.95C19.4764 15.0123 20.003 13.7407 20.003 12.4149C20.003 11.0891 19.4764 9.81764 18.5391 8.88"
+              stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+          </g>
+        </svg>
+      </div>
+    </div>
+    <div id="content" class="hidden w-full flex items-center flex-col  mb-15">
       <a onclick=""> content</a>
       <button id="enableAudioBtn">Enable Hover Sounds</button>
       <div id="pickedLingua"
-        class="mb-15 mt-20  h-full w-full  flex flex-wrap items-center justify-evenly gap-x-5 gap-y-15"></div>
-
+        class="p-6 mt-10  h-full w-full  flex flex-wrap items-center justify-evenly gap-x-5 gap-y-15"></div>
+      <div id="content-loader" class="hidden w-[85%] flex justify-evenly items-center">
+        <span class="w-[48%] h-[1px] bg-gray-200"></span>
+        <img src="../assets/pokeball-icon.png" alt="pokeball" class="pokeball-loading w-6 h-6">
+        <span class="w-[48%] h-[1px] bg-gray-200"></span>
+      </div>
       <!-- Template for new lingua items -->
       <template id="template">
-        <div class="container_pokemon" onmouseenter="playaudio(this)" onmouseleave="stopaudio(this)" onclick="curtain()">
+        <div class="container_pokemon" onmouseenter="playaudio(this)" onmouseleave="stopaudio(this)"
+          onclick="curtain()">
           <audio control class="audioplayer">
             <source src="https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/legacy/35.ogg"
               type="audio/ogg">
           </audio>
-          <div 
+          <div
             class="cards p-2 flex flex-col items-center justify-center relative cursor-pointer rounded-[40px] hover:border hover:border-orange-50 hover:shadow-lg shadow-xl h-[150px] w-[200px] ">
             <img class="imgpPokemon drop-shadow-lg absolute w-24 h-24 top-[-50px] " src="../assets/shadow.png" alt=""
               id="imagePokemon">
@@ -137,19 +174,34 @@
 <script>
   let offset = 0;
   let limit = 20;
-  const loading = document.getElementById("loading")
-  const content = document.getElementById('content')
+  const loading = document.getElementById("loading");
+  const content = document.getElementById('content');
   const mybutton = document.getElementById("upBtn");
-  const imagePokemon = document.getElementById("imagePokemon")
+  const imagePokemon = document.getElementById("imagePokemon");
+  const content_loader = document.getElementById("content-loader");
   // setInterval(function () { loading.classList.add("hidden"); content.classList.remove("hidden") }, 1000);
-  
+  const mute = document.getElementById("mute");
+  const unmute = document.getElementById("unmute");
   window.onscroll = function () { scrollFunction(), bottomFunction() };
-
+  let audioEnabled = false;
   setTimeout(() => {
     setInterval(() => {
 
     }, 100);
   }, 10000);
+
+  function togglesound(){
+    if (!audioEnabled){
+      mute.classList.add("hidden");
+      unmute.classList.remove("hidden");
+      audioEnabled = true;
+      console.log("IAM RUNNING")
+    }else{
+       unmute.classList.add("hidden");
+      mute.classList.remove("hidden");
+      audioEnabled =  false;
+    }
+  }
 
   function scrollFunction() {
     if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
@@ -184,7 +236,7 @@
 
 
   // Simulate selected value (can be from a dropdown or input)
-  function addLingua(word, image = null, id, icon,cries) {
+  function addLingua(word, image = null, id, icon, cries) {
     const instance = template.content.cloneNode(true);
 
     const linguaElement = instance.querySelector('.lingua');
@@ -233,7 +285,7 @@
 
   window.onload = function () {
     // Your JavaScript code here
-    fetch_pokemon()
+    fetch_pokemon(first = true)
   };
 
   async function quotes() {
@@ -259,16 +311,21 @@
       qoutesId.classList.remove('hidden');
     }
   }
-  let audioEnabled = false;
+  
 
   document.getElementById('enableAudioBtn').addEventListener('click', () => {
     audioEnabled = true;
     alert('Hover sounds enabled!');
   });
 
-  function fetch_pokemon() {
-    loading.classList.remove("hidden"); 
-    content.classList.add("hidden");
+  function fetch_pokemon(first = false) {
+    if (first) {
+      loading.classList.remove("hidden");
+      content.classList.add("hidden");
+    } else {
+      content_loader.classList.remove("hidden");
+    }
+
     fetch(`https://pokeapi.co/api/v2/pokemon/?offset=${offset}&limit=${limit}`)
       .then(response => {
         if (!response.ok) {
@@ -318,9 +375,14 @@
             // Now they are in order matching `results`
 
             pokemonList.forEach(p => {
-              addLingua(p.name, p.image, p.id, p.type,p.cries);
-            content.classList.remove("hidden");
-            loading.classList.add("hidden"); 
+              addLingua(p.name, p.image, p.id, p.type, p.cries);
+              if (first) {
+                content.classList.remove("hidden");
+                loading.classList.add("hidden");
+              } else {
+                content_loader.classList.add("hidden");
+              }
+
             });
           })
           .catch(error => {
@@ -463,7 +525,7 @@
   .ball3 {
     transition: transform 0.5s ease-in-out;
     animation: fadein 0.5s ease-in-out forwards;
-    box-shadow: 0 0 4px 2px rgba(0,0,0,0.1);
+    box-shadow: 0 0 4px 2px rgba(0, 0, 0, 0.1);
 
   }
 
@@ -471,7 +533,7 @@
     opacity: 0;
     transition: transform 0.5s ease-in-out;
     animation: fadein 0.5s ease-in-out 0.5s forwards;
-    box-shadow: 0 0 4px 2px rgba(0,0,0,0.1);
+    box-shadow: 0 0 4px 2px rgba(0, 0, 0, 0.1);
 
   }
 
@@ -479,7 +541,7 @@
     opacity: 0;
     transition: transform 0.5s ease-in-out;
     animation: fadein 0.5s ease-in-out 1s forwards;
-    box-shadow: 0 0 4px 2px rgba(0,0,0,0.1);
+    box-shadow: 0 0 4px 2px rgba(0, 0, 0, 0.1);
   }
 
   .quote_container {
@@ -498,6 +560,20 @@
     }
 
 
+  }
+
+  .pokeball-loading {
+    animation: pokeball-load 1s ease-in-out infinite;
+  }
+
+  @keyframes pokeball-load {
+    from {
+      transform: rotateZ(0deg);
+    }
+
+    to {
+      transform: rotateZ(360deg);
+    }
   }
 </style>
 
