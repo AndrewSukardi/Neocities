@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home</title>
+  <link rel="shortcut icon" href="/assets/favicon.webp" type="image/x-icon">
+  <!-- The style.css file allows you to change the look of your web pages.
+         If you include the next line in all your web pages, they will all share the same look.
+         This makes it easier to make new pages for your site. -->
+  <link href="css/about.css" rel="stylesheet" type="text/css" media="all">
+  <link rel="stylesheet" href="/public/font/font.css">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+
+<body>
+  <div class="relative h-full w-full">
+    <div id="loading" class="absolute fixed w-full h-[100vh] flex justify-center items-center">
+      <img class="h-12 w-12" src="../assets/pokeball.gif" alt="">
+    </div>
+
+    <!-- <div id="curtain" class="curtain absolute h-full w-full flex">
+        <span class="w-[10%] h-full bg-gray-100 rounded-b-full"></span>
+        <span class="w-[10%] h-full bg-black right-0 rounded-b-full"></span>
+        <span class="w-[10%] h-full bg-gray-100 rounded-b-full"></span>
+        <span class="w-[10%] h-full bg-black rounded-b-full"></span>
+        <span class="w-[10%] h-full bg-gray-100 rounded-b-full"></span>
+        <span class="w-[10%] h-full bg-black rounded-b-full"></span>
+        
+        <span class="w-[10%] h-full bg-gray-100 rounded-b-full"></span>
+        <span class="w-[10%] h-full  bg-black rounded-b-full"></span>
+        <span class="w-[10%] h-full bg-gray-100 rounded-b-full"></span>
+        <span class="w-[10%] h-full bg-black rounded-b-full"></span>
+    </div> -->
+    <input type="text" onkeyup="console.log(document.getElementById('search').value)" name="search" id="search"
+      placeholder="Search for names..">
+    <div id="content" class="hidden w-full flex items-center flex-col">
+      <a onclick=""> content</a>
+      <button id="enableAudioBtn">Enable Hover Sounds</button>
+      <div id="pickedLingua"
+        class="mb-15 mt-20  h-full w-full  flex flex-wrap items-center justify-evenly gap-x-5 gap-y-15"></div>
+
+      <!-- Template for new lingua items -->
+      <template id="template">
+        <div class="container_pokemon" onmouseenter="playaudio(this)" onmouseleave="stopaudio(this)" onclick="curtain()">
+          <audio control class="audioplayer">
+            <source src="https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/legacy/35.ogg"
+              type="audio/ogg">
+          </audio>
+          <div 
+            class="cards p-2 flex flex-col items-center justify-center relative cursor-pointer rounded-[40px] hover:border hover:border-orange-50 hover:shadow-lg shadow-xl h-[150px] w-[200px] ">
+            <img class="imgpPokemon drop-shadow-lg absolute w-24 h-24 top-[-50px] " src="../assets/shadow.png" alt=""
+              id="imagePokemon">
+
+            <div class="mt-12">
+              <p class="idPokemon text-xs text-gray-300 font-bold"></p>
+              <p class="lingua font-bold mb-[-20px] text-gray-600 capitalize"></p>
+              <div id="typeContainer" class="flex justify-evenly gap-2"></div>
+            </div>
+          </div>
+
+        </div>
+      </template>
+      <template id="typeTemplate">
+        <div id="icon_image" class="w-15 h-15"></div>
+      </template>
+      <button onclick="topFunction()" id="upBtn" title="Go to top"
+        class="hidden z-[999] absolute w-20 h-20 bottom-[35px] right-0 fixed flex items-center justify-center">
+        <svg class="shadowed-path" width="128px" height="128px" viewBox="-9 -9 54 54" xmlns="http://www.w3.org/2000/svg"
+          xmlns:xlink="http://www.w3.org/1999/xlink" fill="#ffffff" transform="rotate(0)matrix(1, 0, 0, 1, 0, 0)"
+          stroke="#ffffff">
+          <g id="SVGRepo_bgCarrier" stroke-width="0">
+            <path transform="translate(-8.4, -8.4), scale(1.275)"
+              d="M16,31.604901917278767C18.513516265758117,31.26173723341706,18.226370501702313,26.97751162275938,20.15242549490934,25.326500362463797C21.4088392848081,24.24950447084621,23.424290393745512,24.784013220474886,24.878516276293333,23.994251962538712C26.587998027800175,23.065866300660915,28.461607831157757,22.069607936889554,29.342859417687414,20.33535782887337C30.225542779420515,18.59829007338945,29.590869826487467,16.509956107911275,29.6708992399104,14.563130589995101C29.761728390567836,12.353586614756273,31.524912530287978,9.447524145070654,29.84977965830712,8.003825986059386C27.82155407212834,6.255818055582024,24.266736071207177,9.134493585849844,21.906029564571874,7.871047685555041C19.995344641904637,6.848452532149151,20.94501112950171,2.9892944775013603,18.940659573779474,2.1652844274710397C17.115317942847927,1.4148672442517252,15.221836074588822,3.397569396356533,13.541181973083111,4.432170676838382C12.152203704633514,5.28721794314497,11.094572428840241,6.516314711541584,9.963551806598103,7.691541842740747C8.973511162464401,8.720278722594673,8.38961681618873,10.078620967801555,7.263029600191754,10.955707787768912C5.4199085114722525,12.390640824079965,2.1490563383703942,12.285011841552564,1.2790033789622406,14.452760907797208C0.5205260328117507,16.342517779613246,3.081606880028429,18.05845721545698,3.6245513536137484,20.02102701492975C4.195238131848544,22.08387633085713,2.924467001309058,24.9192777052838,4.557367247792696,26.30299280750237C6.2946078240441015,27.775125613362686,9.243993923098603,25.57640906913689,11.310083326571942,26.53372531506593C13.42226729818896,27.51239933905571,13.6934959681459,31.91980368962844,16,31.604901917278767"
+              fill="oklch(90.1% 0.076 70.697)" strokewidth="0"></path>
+          </g>
+          <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+          <g id="SVGRepo_iconCarrier">
+            <filter id="a" color-interpolation-filters="sRGB" height="1.302168" width="1.757457" x="-.378729"
+              y="-.151084">
+              <feGaussianBlur stdDeviation="1.25931"></feGaussianBlur>
+            </filter>
+            <path
+              d="m140.3125 895.375c-.31022.0597-.58621.27572-.71875.5625l-3 6c-.2396.5108.0576 1.19916.59375 1.375l1.8125.625v10.4375c.00005.52358.47642.99995 1 1h1c.52358-.00005.99995-.47642 1-1v-10.4375l1.8125-.625c.53611-.17584.83335-.8642.59375-1.375l-3-6c-.17625-.36721-.59466-.60257-1-.5625-.0312-.001-.0625-.001-.0937 0z"
+              filter="url(#a)" opacity=".2" transform="matrix(.92133638 0 0 .92133638 -117.44776 -821.65289)"></path>
+            <g stroke-width=".921336">
+              <path
+                d="m11.827251 2.3673349a.92142851.92142851 0 0 0 -.662211.5182517l-2.7640088 5.5280183a.92142851.92142851 0 0 0 .5470434 1.2668375l1.6699224.5758356v9.616448a.92142851.92142851 0 0 0 .921336.921336h.921337a.92142851.92142851 0 0 0 .921336-.921336v-9.616448l1.669922-.5758356a.92142851.92142851 0 0 0 .547044-1.2668375l-2.76401-5.5280183a.92142851.92142851 0 0 0 -.921336-.5182517.92142851.92142851 0 0 0 -.08633 0z">
+              </path>
+              <path
+                d="m12.000001 3.2886712-2.7640088 5.5280183 2.3033408.7773776v10.2786589h.921337v-10.2786589l2.303341-.7773776z"
+                fill="#fefefe"></path>
+            </g>
+          </g>
+        </svg>
+      </button>
+
+    </div>
+
+    <a id='qoutes' lang="en" class="absolute fixed z-[999999]">
+      <span
+        class="ball1 absolute fixed bottom-29 left-14 rounded-full w-[11px] h-[11px] shadow-xl border border-gray-300 bg-white"></span>
+      <span
+        class="ball2 absolute fixed bottom-27 left-12 rounded-full w-[8px] h-[8px] shadow-xl border border-gray-300 bg-white"></span>
+      <span
+        class="ball3 absolute fixed bottom-26 left-10 rounded-full w-[5px] h-[5px] shadow-xl border border-gray-300 bg-white"></span>
+      <div
+        class="quote_container cursor-pointer absolute fixed bottom-31 left-18 text-bold text-xs font-semibold shadow-xl border border-gray-100 rounded-t-3xl rounded-ee-3xl bg-white max-w-xs hyphens-auto pr-5">
+        <div class="pl-4 py-3">
+          <p class="quotes_text">Click me, to see some magic !!!</p>
+        </div>
+        <span class="relative bottom-0 left-0 block h-[3px] w-full bg-[#ffe0b0] rounded-r-full"></span>
+      </div>
+    </a>
+
+
+    <footer class="flex flex-col text-bold text-xs absolute fixed p-2 bottom-0 w-full h-10 shadow-footer  bg-white">
+
+      <div class="flex flex-row justify-between items-center w-full h-full ">
+        <div class="cursor-pointer" onclick="quotes()"><img
+            class=" relative bottom-11 right-1 w-30 h-30 rotate-x-180 rotate-z-180" src="../assets/snorlax.png" alt=""
+            srcset=""></div>
+
+        <p>© 2025 Andrew</p>
+        <a href="https://pokedex.david-hckh.com/">Inspired by David Heckhoff </a>
+      </div>
+
+
+
+    </footer>
+
+  </div>
+
+</body>
+
+<script>
+  let offset = 0;
+  let limit = 20;
+  const loading = document.getElementById("loading")
+  const content = document.getElementById('content')
+  const mybutton = document.getElementById("upBtn");
+  const imagePokemon = document.getElementById("imagePokemon")
+  // setInterval(function () { loading.classList.add("hidden"); content.classList.remove("hidden") }, 1000);
+  
+  window.onscroll = function () { scrollFunction(), bottomFunction() };
+
+  setTimeout(() => {
+    setInterval(() => {
+
+    }, 100);
+  }, 10000);
+
+  function scrollFunction() {
+    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+      mybutton.classList.remove("hidden");
+    } else {
+      mybutton.classList.add("hidden");
+    }
+  }
+
+  function bottomFunction() {
+    const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+    const scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight;
+    const clientHeight = document.documentElement.clientHeight || document.body.clientHeight;
+
+    const scrollBottom = scrollHeight - (scrollTop + clientHeight);
+
+    if (scrollBottom <= 40) {
+      fetch_pokemon();
+    }
+
+
+  }
+
+  function topFunction() {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+  }
+
+  const template = document.getElementById('template');
+
+  const pickedLingua = document.getElementById('pickedLingua');
+
+
+  // Simulate selected value (can be from a dropdown or input)
+  function addLingua(word, image = null, id, icon,cries) {
+    const instance = template.content.cloneNode(true);
+
+    const linguaElement = instance.querySelector('.lingua');
+    const audioElement = instance.querySelector('.audioplayer');
+    const idPokemon = instance.querySelector('.idPokemon');
+    const container_pokemon = instance.querySelector('.container_pokemon');
+    const imagePokemon = instance.querySelector("#imagePokemon");
+    const typeTemplate = document.getElementById('typeTemplate');
+
+    // This is the container INSIDE this cloned card where you'll put type icons
+    const typeContainer = instance.querySelector('#typeContainer');
+
+    linguaElement.textContent = word;
+    idPokemon.textContent = "N° " + id;  // set the word
+    linguaElement.id = `${id}_text`;                     // optional: set unique ID
+    audioElement.id = `${id}_audio`;
+    audioElement.src = cries;
+    container_pokemon.id = id;
+    if (image) {
+      imagePokemon.src = image;
+    }
+
+    if (icon && Array.isArray(icon)) {
+
+      icon.forEach(p => {
+        const instance2 = typeTemplate.content.cloneNode(true);
+        const imageType = instance2.querySelector("#icon_image");
+
+        if (p && imageType) {
+
+          // const imageUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/types/generation-viii/sword-shield/7.png"
+          imageType.style.backgroundImage = `url(${p})`;
+          imageType.style.backgroundSize = 'contain';  // optional styling
+          imageType.style.backgroundRepeat = 'no-repeat';
+          imageType.style.backgroundPosition = 'center';
+
+          typeContainer.appendChild(instance2);
+        }
+      });
+    }
+
+    pickedLingua.appendChild(instance);  // Append whole card to main container
+  }
+
+
+
+  window.onload = function () {
+    // Your JavaScript code here
+    fetch_pokemon()
+  };
+
+  async function quotes() {
+    const qoutesId = document.getElementById("qoutes");
+    const quotes_text = document.querySelector('.quotes_text');
+    qoutesId.classList.add('hidden');
+    try {
+      const res = await fetch('https://pokefacts.vercel.app/?count=1');
+      if (!res.ok) {
+        quotes_text.textContent = "Error fetching data";
+        // throw new Error(`HTTP error! Status: ${res.status}`);
+
+      }
+      else {
+        const detail = await res.json();
+        quotes_text.textContent = detail.data;
+
+      }
+    } catch {
+      quotes_text.textContent = "Something went wrong";
+    }
+    finally {
+      qoutesId.classList.remove('hidden');
+    }
+  }
+  let audioEnabled = false;
+
+  document.getElementById('enableAudioBtn').addEventListener('click', () => {
+    audioEnabled = true;
+    alert('Hover sounds enabled!');
+  });
+
+  function fetch_pokemon() {
+    loading.classList.add("hidden"); 
+    fetch(`https://pokeapi.co/api/v2/pokemon/?offset=${offset}&limit=${limit}`)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        return response.json();  // 👈 Parse as JSON, not text
+      })
+      .then(data => {
+        offset += 20
+
+        const results = data.results; // Array of Pokémon
+
+
+
+        // Create an array of promises for each Pokémon's full data
+        const detailPromises = results.map(async (pokemon) => {
+          const image_type = [];
+          const res1 = await fetch(pokemon.url);
+          if (!res1.ok) throw new Error(`HTTP error! Status: ${res1.status}`);
+          const detail = await res1.json();
+          const cries = detail.cries.latest;
+          const detail_type = detail.types;
+
+          for (const p of detail_type) {
+            const res2 = await fetch(p.type.url);
+            if (!res2.ok) throw new Error(`Second API HTTP error! Status: ${res2.status}`);
+            const typeData = await res2.json();
+            const icon = typeData.sprites['generation-viii']['sword-shield'].name_icon;
+            image_type.push(icon);
+          }
+
+
+
+          return {
+            name: pokemon.name,
+            image: detail.sprites.front_default,
+            id: detail.id,
+            type: image_type,
+            cries: cries
+          };
+        });
+
+
+        Promise.all(detailPromises)
+          .then(pokemonList => {
+            // Now they are in order matching `results`
+
+            pokemonList.forEach(p => {
+              addLingua(p.name, p.image, p.id, p.type,p.cries);
+            content.classList.remove("hidden");
+            });
+          })
+          .catch(error => {
+            console.error("Failed to fetch details:", error);
+          });
+
+      })
+      .catch(error => {
+        console.error("Failed to fetch Pokémon:", error);
+      });
+  }
+
+
+  function playaudio(elem) {
+    console.log("play", `${elem.id}_audio`);
+    if (!audioEnabled) return;
+    const audio = document.getElementById(`${elem.id}_audio`);
+    audio.volume = 0.1;
+    audio.play();
+  }
+
+  function stopaudio(elem) {
+    console.log("stop", `${elem.id}_audio`);
+    const audio = document.getElementById(`${elem.id}_audio`);
+    audio.pause();
+    audio.currentTime = 0;
+  }
+
+</script>
+
+<style>
+  .curtain {
+    overflow: none;
+    /* position: fixed; /* FIXED so it covers the viewport */
+
+    /* background-color: black; */
+    animation: curtainDrop 5s ease-in-out forwards;
+    z-index: 9999;
+    /* make sure it's on top */
+  }
+
+  @keyframes curtainDrop {
+    from {
+      transform: translateY(-100%);
+    }
+
+    to {
+      transform: translateY(0);
+    }
+  }
+
+  .loading_pokemon {
+    /* semi-transparent gray base */
+
+    /* Striped gradient */
+
+    animation: loading 1.5s ease-in-out infinite;
+  }
+
+  @keyframes loading {
+    0% {
+      opacity: 0.6;
+    }
+
+    50% {
+      opacity: 1;
+    }
+
+    100% {
+      opacity: 0.6;
+    }
+  }
+
+  .shadowed-path {
+    opacity: 0;
+    filter: drop-shadow(1px 1px 1px oklch(61.54% 0.05972 70.784));
+    transform: translateY(100px);
+    /* start hidden */
+    animation: showing 0.5s ease-in-out forwards;
+  }
+
+  .shadowed-path:hover {
+    filter: drop-shadow(3px 3px 3px oklch(61.54% 0.05972 70.784));
+    cursor: pointer;
+
+  }
+
+  .shadow-footer {
+    filter: drop-shadow(0px -1px 10px rgb(0 0 0 / 0.1));
+  }
+
+  /* .cards {
+    background: linear-gradient(360deg,rgba(251, 124, 124, 1) 0%, rgba(255, 255, 255, 1) 80%);
+  } */
+
+  .cards:hover .imgpPokemon {
+    animation: hovering_pokemon 1s ease-in-out forwards;
+
+    transition: transform 0.5s ease-in-out;
+  }
+
+  @keyframes hovering_pokemon {
+    0% {
+      transform: scale(1.2) rotateZ(0deg);
+    }
+
+
+    60% {
+      transform: scale(1.4) rotateZ(5deg);
+    }
+
+    20% {
+      transform: scale(1.4) rotateZ(-5deg);
+    }
+
+    100% {
+      transform: scale(1.3) rotateZ(0);
+    }
+  }
+
+
+  @keyframes showing {
+    0% {
+      transform: translateY(100px);
+      display: none;
+      opacity: 0;
+    }
+
+    50% {
+      transform: translateY(-30px);
+    }
+
+    100% {
+      transform: translateY(0px);
+      display: block;
+      opacity: 1;
+    }
+  }
+
+  .ball3 {
+    transition: transform 0.5s ease-in-out;
+    animation: fadein 0.5s ease-in-out forwards;
+    box-shadow: 0 0 4px 2px rgba(0,0,0,0.1);
+
+  }
+
+  .ball2 {
+    opacity: 0;
+    transition: transform 0.5s ease-in-out;
+    animation: fadein 0.5s ease-in-out 0.5s forwards;
+    box-shadow: 0 0 4px 2px rgba(0,0,0,0.1);
+
+  }
+
+  .ball1 {
+    opacity: 0;
+    transition: transform 0.5s ease-in-out;
+    animation: fadein 0.5s ease-in-out 1s forwards;
+    box-shadow: 0 0 4px 2px rgba(0,0,0,0.1);
+  }
+
+  .quote_container {
+    opacity: 0;
+    transition: transform 0.5s ease-in-out;
+    animation: fadein 0.5s ease-in-out 1.5s forwards;
+  }
+
+  @keyframes fadein {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+
+
+  }
+</style>
+
+</html>
